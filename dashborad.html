@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Camera Feed</title>
+</head>
+<body>
+    <h2>Live Feed from Laptop1</h2>
+    <img id="cameraFeed" width="640" height="480" />
+
+    <script>
+        const ws = new WebSocket("ws://10.132.202.178:8000/ws");
+        const img = document.getElementById("cameraFeed");
+
+        console.log("Initializing WebSocket...");
+
+        ws.onopen = () => {
+            console.log("✅ Connected to WebSocket");
+        };
+
+        ws.onmessage = (event) => {
+            // Log frame size for debugging
+            // console.log("📷 Frame received, length:", event.data.length);
+
+            // Update the <img> with base64 JPEG
+            img.src = "data:image/jpeg;base64," + event.data;
+        };
+
+        ws.onerror = (err) => {
+            console.error("❌ WebSocket error:", err);
+        };
+
+        ws.onclose = () => {
+            console.warn("⚠️ WebSocket closed");
+        };
+    </script>
+</body>
+</html>
